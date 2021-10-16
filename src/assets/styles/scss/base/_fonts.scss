@@ -1,2 +1,10 @@
 // Пример подключения
 // @include font-face("Roboto-Black", "Roboto-Black", 400, "normal", "woff");
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Material Icons'),
+    local('MaterialIcons-Regular'),
+    url(../fonts/MaterialIcons-Regular.woff2) format('woff2');
+}

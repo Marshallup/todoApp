@@ -1,1 +1,11 @@
-h2 MAIN
+section.todo-app
+  .container
+    .row
+      .col.push-s3.s6
+        ul#todo-app.todo-app__list.collection.with-header
+          li.collection-header
+            .todo-app-create__wrap
+              .input-field
+                textarea#todo-create.materialize-textarea.todo-app-create__textarea
+                label(for="todo-create") Textarea
+              i#todo-create-icon.material-icons.todo-app-create__send send

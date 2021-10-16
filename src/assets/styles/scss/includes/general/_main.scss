@@ -1,3 +1,50 @@
-h2 {
-  color: red;
+.todo-app {
+  &__list {
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+  }
+  &-create {
+    &__wrap {
+      position: relative;
+    }
+    &__textarea {
+      padding-right: 30px !important;
+    }
+    &__send {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      transform: translate(0, -100%);
+      cursor: pointer;
+    }
+  }
+  &-item {
+    position: relative;
+    padding: 25px 50px 25px 45px !important;
+    // padding-left: 50px !important;
+    // padding-right: 35px !important;
+    &:hover {
+      .todo-app-item {
+        &__delete {
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+    }
+    &__checkbox {
+      &-label {
+        top: 24px;
+        left: 12px;
+        position: absolute;
+      }
+    }
+    &__delete {
+      opacity: 0;
+      top: 24px;
+      right: 10px;
+      position: absolute;
+      cursor: pointer;
+      transition: opacity 0.5s ease;
+      visibility: hidden;
+    }
+  }
 }
