@@ -9,9 +9,10 @@ class TodoApp {
 
   initElements(app) {
     this.createTodoField = new createTodoField(app);
+    this.loadLocalTodos();
   }
 
-  createTodo() {
+  initCreateTodo() {
     const $this = this;
     const { submitElement } = this.createTodoField;
 
@@ -58,8 +59,7 @@ class TodoApp {
 
   init() {
     this.initElements(this.app);
-    this.createTodo();
-    this.loadLocalTodos();
+    this.initCreateTodo();
   }
 
   saveLocalTodos(todoVal) {
@@ -96,11 +96,13 @@ class TodoApp {
   }
 }
 
-class TodoItem {
-  constructor() {
-    this.htmlElement = null;
-    this.value = null;
-    this.submitElement = null;
+class createTodoField {
+
+  constructor(app) {
+    this.htmlElement = app.querySelector('#todo-create');
+    this.value = this.htmlElement.value;
+    this.submitElement = app.querySelector('#todo-create-icon');
+    this.updateValue();
   }
 
   updateValue() {
@@ -108,6 +110,15 @@ class TodoItem {
     this.htmlElement.addEventListener('input', function () {
       $this.value = this.value;
     })
+  }
+
+}
+
+class newTodoField {
+  constructor(value) {
+    this.htmlElement = this.createHtmlElement(value);
+    this.value = value;
+    this.deleteIcon = this.htmlElement.querySelector('.todo-app-item__delete');
   }
 
   createHtmlElement(text) {
@@ -134,27 +145,6 @@ class TodoItem {
     div.appendChild(i);
 
     return li;
-  }
-}
-
-class createTodoField extends TodoItem {
-
-  constructor(app) {
-    super();
-    this.htmlElement = app.querySelector('#todo-create');
-    this.value = this.htmlElement.value;
-    this.submitElement = app.querySelector('#todo-create-icon');
-    this.updateValue();
-  }
-
-}
-
-class newTodoField extends TodoItem {
-  constructor(value) {
-    super();
-    this.htmlElement = this.createHtmlElement(value);
-    this.value = value;
-    this.deleteIcon = this.htmlElement.querySelector('.todo-app-item__delete');
   }
 
 }
