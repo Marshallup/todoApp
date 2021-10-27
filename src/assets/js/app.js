@@ -20,9 +20,9 @@ class TodoApp {
       const newTodoVal = $this.createTodoField.value;
 
       if (newTodoVal) {
-        const newTodo = new newTodoField(newTodoVal);
+        const newTodo = new newTodoField({ value: newTodoVal, status: 'active'});
         $this.addTodoInDOM(newTodo);
-        $this.saveLocalTodos(newTodo.value);
+        $this.saveLocalTodos({value: newTodo.value, status: newTodo.status});
         console.log(newTodo, 'create Todo');
       } else {
         console.log('no');
@@ -62,14 +62,14 @@ class TodoApp {
     this.initCreateTodo();
   }
 
-  saveLocalTodos(todoVal) {
+  saveLocalTodos(todo) {
     let localTodos = localStorage.getItem('todos');
 
     if (localTodos) {
       localTodos = JSON.parse(localTodos);
-      localTodos.push(todoVal);
+      localTodos.push(todo);
     } else {
-      localTodos = [todoVal];
+      localTodos = [todo];
     }
 
     localStorage.setItem('todos', JSON.stringify(localTodos));
@@ -79,10 +79,43 @@ class TodoApp {
     let todos = localStorage.getItem('todos');
 
     if (todos) {
-      JSON.parse(todos).forEach(val => {
-        const newTodo = new newTodoField(val);
+      JSON.parse(todos).forEach(todo => {
+        const newTodo = new newTodoField({value: todo.value, status: todo.status });
         this.addTodoInDOM(newTodo);
       });
+      // this.filterTodos('active');
+    }
+  }
+
+  filterTodos(type) {
+
+    let checkbox;
+
+    document.querySelectorAll('.todo-app-checkbox').forEach(item => {
+      const input = item.querySelector('input');
+      input.checked = false;
+      input.classList.remove('active');
+    });
+
+    switch(type) {
+      case 'active':
+        checkbox = document.querySelector('.todo-app-checkbox__active').querySelector('input');
+      break;
+      case 'completed':
+        checkbox = document.querySelector('.todo-app-checkbox__completed').querySelector('input');
+      break;
+      default:
+        checkbox = document.querySelector('.todo-app-checkbox__all').querySelector('input');
+      break;
+    }
+
+    checkbox.checked = true;
+    checkbox.classList.add('active');
+  }
+
+  addEventOnCheckboxes() {
+    document.querySelectorAll('.todo-app-checkbox').onclick = () => {
+      
     }
   }
 
@@ -115,9 +148,10 @@ class createTodoField {
 }
 
 class newTodoField {
-  constructor(value) {
-    this.htmlElement = this.createHtmlElement(value);
-    this.value = value;
+  constructor(data) {
+    this.htmlElement = this.createHtmlElement(data.value);
+    this.value = data.value;
+    this.status = data.status;
     this.deleteIcon = this.htmlElement.querySelector('.todo-app-item__delete');
   }
 
@@ -148,6 +182,81 @@ class newTodoField {
   }
 
 }
+
+class filter {
+
+  constructor() {
+
+    const all = this.getChekbox('.todo-app-checkbox__all');
+    const active = this.getChekbox('.todo-app-checkbox__active');
+    const completed = this.getChekbox('.todo-app-checkbox__completed');
+
+    this.checkboxes = {
+      all: {...all},
+      active: {...active},
+      completed: {...completed},
+    };
+    this.active = this.checkboxes.all;
+  }
+
+  getChekbox(className) {
+    const wrap = document.querySelector(className);
+    return {
+      wrap,
+      input: wrap.querySelector('input')
+    }
+  }
+
+  filterTodos(type) {
+
+    const $this = this;
+
+    Object.values(this.checkboxes).forEach(item => {
+      item.input.addEventListener('click', function() {
+        console.log('click')
+        if(item.input.checked) {
+          Object.values($this.checkboxes).forEach(item => {
+            item.input.checked = false;
+          });
+          item.wrap.classList.add('active');
+          item.input.checked = true;
+          $this.active.wrap.classList.remove('active');
+          $this.active = item;
+        } else {
+          item.input.checked = true;
+          // item.wrap.classList.remove('active')
+        }
+      }, true)
+    })
+
+    // let checkbox;
+
+    // document.querySelectorAll('.todo-app-checkbox').forEach(item => {
+    //   const input = item.querySelector('input');
+    //   input.checked = false;
+    //   input.classList.remove('active');
+    // });
+
+    // switch(type) {
+    //   case 'active':
+    //     checkbox = document.querySelector('.todo-app-checkbox__active').querySelector('input');
+    //   break;
+    //   case 'completed':
+    //     checkbox = document.querySelector('.todo-app-checkbox__completed').querySelector('input');
+    //   break;
+    //   default:
+    //     checkbox = document.querySelector('.todo-app-checkbox__all').querySelector('input');
+    //   break;
+    // }
+
+    // checkbox.checked = true;
+    // checkbox.classList.add('active');
+  }
+}
+
+const filter1 = new filter;
+filter1.filterTodos()
+
 
 const todoApp = new TodoApp('#todo-app');
 
